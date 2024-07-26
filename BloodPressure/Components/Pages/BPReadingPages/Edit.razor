@@ -1,0 +1,105 @@
+﻿@page "/BPReadings/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using BloodPressure.Models
+@inject IDbContextFactory<BPReadingContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>BPReading</h4>
+<hr />
+@if (BPReading is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="BPReading" OnValidSubmit="UpdateBPReading" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="BPReading.Id" value="@BPReading.Id" />
+                <div class="mb-3">
+                    <label for="dateandtime" class="form-label">DateAndTime:</label>
+                    <InputDate id="dateandtime" @bind-Value="BPReading.DateAndTime" class="form-control" />
+                    <ValidationMessage For="() => BPReading.DateAndTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="systolic" class="form-label">Systolic:</label>
+                    <InputNumber id="systolic" @bind-Value="BPReading.Systolic" class="form-control" />
+                    <ValidationMessage For="() => BPReading.Systolic" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="diastolic" class="form-label">Diastolic:</label>
+                    <InputNumber id="diastolic" @bind-Value="BPReading.Diastolic" class="form-control" />
+                    <ValidationMessage For="() => BPReading.Diastolic" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="heartrate" class="form-label">HeartRate:</label>
+                    <InputNumber id="heartrate" @bind-Value="BPReading.HeartRate" class="form-control" />
+                    <ValidationMessage For="() => BPReading.HeartRate" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/bpreadings">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public BPReading? BPReading { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        BPReading ??= await context.BPReading.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (BPReading is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateBPReading()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(BPReading!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BPReadingExists(BPReading!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/bpreadings");
+    }
+
+    bool BPReadingExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.BPReading.Any(e => e.Id == id);
+    }
+}

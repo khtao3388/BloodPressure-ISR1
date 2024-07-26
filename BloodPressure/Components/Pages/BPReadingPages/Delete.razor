@@ -1,0 +1,69 @@
+﻿@page "/bpreadings/delete"
+
+@using Microsoft.EntityFrameworkCore
+@using BloodPressure.Models
+@inject IDbContextFactory<BPReadingContext> DbFactory
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>BPReading</h4>
+    <hr />
+    @if (bpreading is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DateAndTime</dt>
+            <dd class="col-sm-10">@bpreading.DateAndTime</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Systolic</dt>
+            <dd class="col-sm-10">@bpreading.Systolic</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Diastolic</dt>
+            <dd class="col-sm-10">@bpreading.Diastolic</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">HeartRate</dt>
+            <dd class="col-sm-10">@bpreading.HeartRate</dd>
+        </dl>
+        <EditForm method="post" Model="bpreading" OnValidSubmit="DeleteBPReading" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(bpreading is null)">Delete</button> |
+            <a href="/bpreadings">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    BPReading? bpreading;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        bpreading = await context.BPReading.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (bpreading is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteBPReading()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.BPReading.Remove(bpreading!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/bpreadings");
+    }
+}
