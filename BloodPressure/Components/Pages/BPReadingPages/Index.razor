@@ -1,0 +1,49 @@
+﻿@page "/bpreadings"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BloodPressure.Models
+@inject IBPReadingRepository repository
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="bpreadings/create">Create New</a>
+</p>
+
+@if (bpreadings == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <QuickGrid Items="@bpreadings">
+        <PropertyColumn Property="@(b => b.Id)" Title="ID" Sortable="true" />
+        <PropertyColumn Property="@(b => b.DateAndTime)" Title="Date and Time" Sortable="true" />
+        <PropertyColumn Property="@(b => b.Systolic)" Title="Systolic" Sortable="true" />
+        <PropertyColumn Property="@(b => b.Diastolic)" Title="Diastolic" Sortable="true" />
+        <PropertyColumn Property="@(b => b.HeartRate)" Title="Heart Rate" Sortable="true" />
+
+        <TemplateColumn Context="bpreadings">
+         <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
+         <a href="@($"bpreadings/details?id={bpreadings.Id}")">Details</a> |
+         <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+
+@code {
+    private IQueryable<BPReading> bpreadings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch all readings
+        var allReadings = await repository.GetAllAsync();
+
+        // Convert to IQueryable for better performance with QuickGrid
+        bpreadings = allReadings.AsQueryable();
+    }
+}

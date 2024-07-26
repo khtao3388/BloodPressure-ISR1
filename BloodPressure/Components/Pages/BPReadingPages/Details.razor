@@ -1,0 +1,53 @@
+﻿@page "/bpreadings/details"
+
+@using Microsoft.EntityFrameworkCore
+@using BloodPressure.Models
+@inject IDbContextFactory<BPReadingContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>BPReading</h4>
+    <hr />
+    @if (bpreading is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DateAndTime</dt>
+            <dd class="col-sm-10">@bpreading.DateAndTime</dd>
+            <dt class="col-sm-2">Systolic</dt>
+            <dd class="col-sm-10">@bpreading.Systolic</dd>
+            <dt class="col-sm-2">Diastolic</dt>
+            <dd class="col-sm-10">@bpreading.Diastolic</dd>
+            <dt class="col-sm-2">HeartRate</dt>
+            <dd class="col-sm-10">@bpreading.HeartRate</dd>
+        </dl>
+        <div>
+            <a href="@($"/bpreadings/edit?id={bpreading.Id}")">Edit</a> |
+            <a href="@($"/bpreadings")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    BPReading? bpreading;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        bpreading = await context.BPReading.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (bpreading is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
