@@ -12,5 +12,5 @@ using BloodPressure.Models;
         {
         }
 
-        public DbSet<BloodPressure.Models.BPReading> BPReading { get; set; } = default!;
+        public DbSet<BPReading> BPReading { get; set; } = default!;
     }

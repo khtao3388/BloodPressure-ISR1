@@ -1,8 +1,6 @@
 ﻿@page "/bpreadings"
 
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
-@using BloodPressure.Models
+
 @inject IBPReadingRepository repository
 
 <PageTitle>Index</PageTitle>
@@ -19,19 +17,29 @@
 }
 else
 {
-    <QuickGrid Items="@bpreadings">
-        <PropertyColumn Property="@(b => b.Id)" Title="ID" Sortable="true" />
-        <PropertyColumn Property="@(b => b.DateAndTime)" Title="Date and Time" Sortable="true" />
-        <PropertyColumn Property="@(b => b.Systolic)" Title="Systolic" Sortable="true" />
-        <PropertyColumn Property="@(b => b.Diastolic)" Title="Diastolic" Sortable="true" />
-        <PropertyColumn Property="@(b => b.HeartRate)" Title="Heart Rate" Sortable="true" />
 
+    <FluentDataGrid Id="priceData" Items="@bpreadings" GridTemplateColumns="1fr 1fr 1fr 1fr 1fr 1fr" TGridItem="BPReading">
+        <PropertyColumn Title="Id" Property="@(c => c!.Id)" Align="Align.Center" />
+       <PropertyColumn Title="Date and Time" 
+           Property="@(c => c!.DateAndTime.ToString("dd MMM yyyy HH:mm"))" Align="Align.Start" />
+        <PropertyColumn Title="Systolic" Property="@(c => c!.Systolic)" Align="Align.Center" />
+        <PropertyColumn Title="Diastolic" Property="@(c => c!.Diastolic)" Align="Align.Center" />
+        <PropertyColumn Title="Heart Rate" Property="@(c => c!.HeartRate)" Align="Align.Center" />
+        
         <TemplateColumn Context="bpreadings">
-         <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
-         <a href="@($"bpreadings/details?id={bpreadings.Id}")">Details</a> |
-         <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
+            <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
+            <a href="@($"bpreadings/details?id={bpreadings.Id}")">Details</a> |
+            <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
         </TemplateColumn>
-    </QuickGrid>
+
+
+
+
+    </FluentDataGrid>
+
+    
+    
+    
 }
 
 
@@ -46,4 +54,7 @@ else
         // Convert to IQueryable for better performance with QuickGrid
         bpreadings = allReadings.AsQueryable();
     }
+
+    
+
 }

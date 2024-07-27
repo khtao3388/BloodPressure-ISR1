@@ -62,7 +62,7 @@
     public async Task DeleteBPReading()
     {
         //using var context = DbFactory.CreateDbContext();
-        repository.DeleteAsync(Id);
+        await repository.DeleteAsync(Id);
         NavigationManager.NavigateTo("/bpreadings");
     }
 }
