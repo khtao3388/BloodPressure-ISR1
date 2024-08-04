@@ -1,9 +1,6 @@
 ﻿@page "/bpreadings/create"
 
-@using Microsoft.EntityFrameworkCore
-@using BloodPressure.Models
 @inject IBPReadingRepository repository
-
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create</PageTitle>
@@ -18,10 +15,13 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="dateandtime" class="form-label">DateAndTime:</label> 
-                <InputDate id="dateandtime" @bind-Value="BPReading.DateAndTime" class="form-control" /> 
-                <ValidationMessage For="() => BPReading.DateAndTime" class="text-danger" /> 
-            </div>        
+                <label for="datetaken" class="form-label">Date Taken:</label> 
+                <InputDate id="datetaken" @bind-Value="BPReading.DateTaken" class="form-control" /> 
+                <ValidationMessage For="() => BPReading.DateTaken" class="text-danger" /> 
+            </div>
+
+            <input type="time" @bind="BPReading.TimeTaken" @bind:event="oninput" />
+
             <div class="mb-3">
                 <label for="systolic" class="form-label">Systolic:</label> 
                 <InputNumber id="systolic" @bind-Value="BPReading.Systolic" class="form-control" /> 

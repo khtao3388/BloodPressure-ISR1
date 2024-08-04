@@ -5,10 +5,10 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1 class="p-3 mb-2 border-primary bg-primary text-white border">Index</h1>
 
 <p>
-    <a href="bpreadings/create">Create New</a>
+    <a href="bpreadings/create" class="btn btn-primary">Create New</a>
 </p>
 
 @if (bpreadings == null)
@@ -18,24 +18,24 @@
 else
 {
 
-    <FluentDataGrid Id="priceData" Items="@bpreadings" GridTemplateColumns="1fr 1fr 1fr 1fr 1fr 1fr" TGridItem="BPReading">
-        <PropertyColumn Title="Id" Property="@(c => c!.Id)" Align="Align.Center" />
-       <PropertyColumn Title="Date and Time" 
-           Property="@(c => c!.DateAndTime.ToString("dd MMM yyyy HH:mm"))" Align="Align.Start" />
-        <PropertyColumn Title="Systolic" Property="@(c => c!.Systolic)" Align="Align.Center" />
-        <PropertyColumn Title="Diastolic" Property="@(c => c!.Diastolic)" Align="Align.Center" />
-        <PropertyColumn Title="Heart Rate" Property="@(c => c!.HeartRate)" Align="Align.Center" />
-        
-        <TemplateColumn Context="bpreadings">
-            <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
-            <a href="@($"bpreadings/details?id={bpreadings.Id}")">Details</a> |
-            <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
-        </TemplateColumn>
+ <QuickGrid Class="table" Items="bpreadings">
+    <PropertyColumn Property="bpreadings => bpreadings.DateTaken" />
+    <PropertyColumn Property="bpreadings => bpreadings.TimeTaken" />
+    <PropertyColumn Property="bpreadings => bpreadings.Systolic" />
+    <PropertyColumn Property="bpreadings => bpreadings.Diastolic" />
+    <PropertyColumn Property="bpreadings => bpreadings.HeartRate" />
 
+    <TemplateColumn Context="bpreadings">
+        <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
+        <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
 
-
-
-    </FluentDataGrid>
+<div class="d-grid gap-2 col-6 mx-auto my-3">
+    <a href="bpreadings/create" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle me-2"></i>Create New
+    </a>
+</div>
 
     
     
