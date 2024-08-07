@@ -1,12 +1,8 @@
 ﻿@page "/BPReadings/edit"
 
-@using Microsoft.EntityFrameworkCore
-@using BloodPressure.Models
+
 
 @inject IBPReadingRepository repository
-
-
-
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -15,43 +11,40 @@
 
 <h4>BPReading</h4>
 <hr />
-@if (BPReading is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="BPReading" OnValidSubmit="UpdateBPReading" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <input type="hidden" name="BPReading.Id" value="@BPReading.Id" />
-                <div class="mb-3">
-                    <label for="dateandtime" class="form-label">DateAndTime:</label>
-                    <InputDate id="dateandtime" @bind-Value="BPReading.DateAndTime" class="form-control" />
-                    <ValidationMessage For="() => BPReading.DateAndTime" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="systolic" class="form-label">Systolic:</label>
-                    <InputNumber id="systolic" @bind-Value="BPReading.Systolic" class="form-control" />
-                    <ValidationMessage For="() => BPReading.Systolic" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="diastolic" class="form-label">Diastolic:</label>
-                    <InputNumber id="diastolic" @bind-Value="BPReading.Diastolic" class="form-control" />
-                    <ValidationMessage For="() => BPReading.Diastolic" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="heartrate" class="form-label">HeartRate:</label>
-                    <InputNumber id="heartrate" @bind-Value="BPReading.HeartRate" class="form-control" />
-                    <ValidationMessage For="() => BPReading.HeartRate" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
-        </div>
+
+ <div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="BPReading" OnValidSubmit="UpdateBPReading" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="datetaken" class="form-label">Date Taken:</label> 
+                <InputDate id="datetaken" @bind-Value="BPReading.DateTaken" class="form-control" /> 
+                <ValidationMessage For="() => BPReading.DateTaken" class="text-danger" /> 
+            </div>
+
+            <input type="time" @bind="BPReading.TimeTaken" @bind:event="oninput" />
+
+            <div class="mb-3">
+                <label for="systolic" class="form-label">Systolic:</label> 
+                <InputNumber id="systolic" @bind-Value="BPReading.Systolic" class="form-control" /> 
+                <ValidationMessage For="() => BPReading.Systolic" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="diastolic" class="form-label">Diastolic:</label> 
+                <InputNumber id="diastolic" @bind-Value="BPReading.Diastolic" class="form-control" /> 
+                <ValidationMessage For="() => BPReading.Diastolic" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="heartrate" class="form-label">HeartRate:</label> 
+                <InputNumber id="heartrate" @bind-Value="BPReading.HeartRate" class="form-control" /> 
+                <ValidationMessage For="() => BPReading.HeartRate" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
     </div>
-}
+</div>
+
 
 <div>
     <a href="/bpreadings">Back to List</a>

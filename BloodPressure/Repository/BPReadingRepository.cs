@@ -21,7 +21,8 @@ namespace BloodPressure.Repository
 
         public async Task<IEnumerable<BPReading>> GetAllAsync()
         {
-            return await _context.BPReading.ToListAsync();
+            return await _context.BPReading.Where(e=>e.DateTaken.Year==2024 
+                && e.DateTaken.Month==6).ToListAsync();
         }
 
         public async Task AddAsync(BPReading bpReading)
