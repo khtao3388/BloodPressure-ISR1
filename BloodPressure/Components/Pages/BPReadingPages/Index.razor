@@ -17,44 +17,72 @@
 }
 else
 {
+    <InputNumber @bind-Value="cyear" min="2010" max="2025" step="1"/>
 
- <QuickGrid Class="table" Items="bpreadings">
-    <PropertyColumn Property="bpreadings => bpreadings.DateTaken" />
-    <PropertyColumn Property="bpreadings => bpreadings.TimeTaken" />
-    <PropertyColumn Property="bpreadings => bpreadings.Systolic" />
-    <PropertyColumn Property="bpreadings => bpreadings.Diastolic" />
-    <PropertyColumn Property="bpreadings => bpreadings.HeartRate" />
+    <InputNumber @bind-Value="cmonth" min="1" max="12" step="1" />
 
-    <TemplateColumn Context="bpreadings">
-        <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
-        <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
+    <button class="btn btn-primary btn-lg" @onclick="UpdateReadings">Update</button>
+
+    <QuickGrid Class="table" Items="bpreadings" Pagination="pagination">
+     
+      <TemplateColumn Context="bpreadings" Title="Date">
+        
+         @bpreadings.DateTaken.ToString("dd MMM yyyy")
+        
     </TemplateColumn>
-</QuickGrid>
 
-<div class="d-grid gap-2 col-6 mx-auto my-3">
-    <a href="bpreadings/create" class="btn btn-primary btn-lg">
-        <i class="bi bi-plus-circle me-2"></i>Create New
-    </a>
-</div>
+        @*   <PropertyColumn Property="bpreadings => bpreadings.DateTaken" Title="Date"/>*@
+        <PropertyColumn Property="bpreadings => bpreadings.TimeTaken" Title="Time"/>
+        <PropertyColumn Property="bpreadings => bpreadings.Systolic" />
+        <PropertyColumn Property="bpreadings => bpreadings.Diastolic" />
+        <PropertyColumn Property="bpreadings => bpreadings.HeartRate" Title="Heart Rate"/>
 
-    
-    
-    
+        <TemplateColumn Context="bpreadings">
+            <a href="@($"bpreadings/edit?id={bpreadings.Id}")">Edit</a> |
+            <a href="@($"bpreadings/delete?id={bpreadings.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+
+    <Paginator State="pagination" /> 
+
+    <div class="d-grid gap-2 col-6 mx-auto my-3">
+        <a href="bpreadings/create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle me-2"></i>Create New
+        </a>
+    </div>
+
+
+
+
 }
 
 
 @code {
+
+    private int cyear, cmonth;
     private IQueryable<BPReading> bpreadings;
+
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
     protected override async Task OnInitializedAsync()
     {
+        
+        cyear = DateTime.Now.Year;
+        cmonth = DateTime.Now.Month - 1;
+        
         // Fetch all readings
-        var allReadings = await repository.GetAllAsync();
+        var allReadings = await repository.GetByMonth(cyear, cmonth);
 
         // Convert to IQueryable for better performance with QuickGrid
         bpreadings = allReadings.AsQueryable();
     }
 
-    
+    private async Task UpdateReadings()
+    {
+        var allReadings = await repository.GetByMonth(cyear, cmonth);
+        bpreadings = allReadings.AsQueryable();
+        StateHasChanged(); // Re-render the component
+    } 
+
 
 }

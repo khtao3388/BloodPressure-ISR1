@@ -19,10 +19,16 @@ namespace BloodPressure.Repository
             return await _context.BPReading.FindAsync(id);
         }
 
+        public async Task<IEnumerable<BPReading>> GetByMonth(int year, int month)
+        {
+            return await _context.BPReading.Where(e => e.DateTaken.Year == year
+                && e.DateTaken.Month == month).ToListAsync();
+            
+        }
+
         public async Task<IEnumerable<BPReading>> GetAllAsync()
         {
-            return await _context.BPReading.Where(e=>e.DateTaken.Year==2024 
-                && e.DateTaken.Month==6).ToListAsync();
+            return await _context.BPReading.ToListAsync();
         }
 
         public async Task AddAsync(BPReading bpReading)

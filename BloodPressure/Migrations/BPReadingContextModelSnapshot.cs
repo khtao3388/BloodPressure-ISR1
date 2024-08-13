@@ -29,8 +29,8 @@ namespace BloodPressure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateAndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DateTaken")
+                        .HasColumnType("date");
 
                     b.Property<int>("Diastolic")
                         .HasColumnType("int");
@@ -41,9 +41,34 @@ namespace BloodPressure.Migrations
                     b.Property<int>("Systolic")
                         .HasColumnType("int");
 
+                    b.Property<TimeOnly>("TimeTaken")
+                        .HasColumnType("time");
+
                     b.HasKey("Id");
 
                     b.ToTable("BPReading");
+                });
+
+            modelBuilder.Entity("BloodPressure.Models.Month", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MonthNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("YearNumber", "MonthNumber")
+                        .IsUnique();
+
+                    b.ToTable("Months");
                 });
 #pragma warning restore 612, 618
         }

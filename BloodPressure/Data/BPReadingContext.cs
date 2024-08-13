@@ -13,4 +13,15 @@ using BloodPressure.Models;
         }
 
         public DbSet<BPReading> BPReading { get; set; } = default!;
-    }
+
+        public DbSet<Month> Months { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Month>()
+                .HasIndex(m => new { m.YearNumber, m.MonthNumber })
+                .IsUnique();
+        }
+}
